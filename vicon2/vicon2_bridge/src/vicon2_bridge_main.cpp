@@ -42,17 +42,13 @@ int main(int argc, char * argv[])
   rclcpp::init(argc, argv);
 
   ViconBridge vb;
-  int value;
-  vb.vicon_node->get_parameter("abc", value);
-  std::cout << value << std::endl;
-  rclcpp::spin(vb.vicon_node);
-  /*
+
   if(vb.connect_vicon())
   {
     vb.start_vicon();
   }
   vb.stop_vicon();
   rclcpp::shutdown();
-  */
+
   return 0;
 }
