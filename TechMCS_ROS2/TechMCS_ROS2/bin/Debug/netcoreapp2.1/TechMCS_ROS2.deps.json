@@ -1,0 +1,151 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v2.1",
+    "signature": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v2.1": {
+      "TechMCS_ROS2/1.0.0": {
+        "dependencies": {
+          "builtin_interfaces_assemblies": "0.0.0.0",
+          "geometry_msgs_assemblies": "0.0.0.0",
+          "MatrixLibrary": "1.0.4623.21205",
+          "rcldotnet_assemblies": "0.0.0.0",
+          "rcldotnet_common": "0.0.0.0",
+          "sensor_msgs_assemblies": "0.0.0.0",
+          "std_msgs_assemblies": "0.0.0.0",
+          "Tech MCS Angle SDK": "1.0.0.0",
+          "Tech MCS SDK": "4.1.0.0"
+        },
+        "runtime": {
+          "TechMCS_ROS2.dll": {}
+        }
+      },
+      "builtin_interfaces_assemblies/0.0.0.0": {
+        "runtime": {
+          "builtin_interfaces_assemblies.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "geometry_msgs_assemblies/0.0.0.0": {
+        "runtime": {
+          "geometry_msgs_assemblies.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "MatrixLibrary/1.0.4623.21205": {
+        "runtime": {
+          "MatrixLibrary.dll": {
+            "assemblyVersion": "1.0.4623.21205",
+            "fileVersion": "1.0.4623.21205"
+          }
+        }
+      },
+      "rcldotnet_assemblies/0.0.0.0": {
+        "runtime": {
+          "rcldotnet_assemblies.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "rcldotnet_common/0.0.0.0": {
+        "runtime": {
+          "rcldotnet_common.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "sensor_msgs_assemblies/0.0.0.0": {
+        "runtime": {
+          "sensor_msgs_assemblies.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "std_msgs_assemblies/0.0.0.0": {
+        "runtime": {
+          "std_msgs_assemblies.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "Tech MCS Angle SDK/1.0.0.0": {
+        "runtime": {
+          "Tech MCS Angle SDK.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Tech MCS SDK/4.1.0.0": {
+        "runtime": {
+          "Tech MCS SDK.dll": {
+            "assemblyVersion": "4.1.0.0",
+            "fileVersion": "4.1.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "TechMCS_ROS2/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "builtin_interfaces_assemblies/0.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "geometry_msgs_assemblies/0.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "MatrixLibrary/1.0.4623.21205": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "rcldotnet_assemblies/0.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "rcldotnet_common/0.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "sensor_msgs_assemblies/0.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "std_msgs_assemblies/0.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Tech MCS Angle SDK/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Tech MCS SDK/4.1.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

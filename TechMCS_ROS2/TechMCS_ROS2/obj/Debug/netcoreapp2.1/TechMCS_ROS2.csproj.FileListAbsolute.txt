@@ -1,0 +1,41 @@
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2_console\bin\Debug\netcoreapp2.1\TechMCS_ROS2.deps.json
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2_console\bin\Debug\netcoreapp2.1\TechMCS_ROS2.runtimeconfig.json
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2_console\bin\Debug\netcoreapp2.1\TechMCS_ROS2.runtimeconfig.dev.json
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2_console\bin\Debug\netcoreapp2.1\TechMCS_ROS2.dll
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2_console\bin\Debug\netcoreapp2.1\TechMCS_ROS2.pdb
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2_console\bin\Debug\netcoreapp2.1\builtin_interfaces_assemblies.dll
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2_console\bin\Debug\netcoreapp2.1\geometry_msgs_assemblies.dll
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2_console\bin\Debug\netcoreapp2.1\MatrixLibrary.dll
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2_console\bin\Debug\netcoreapp2.1\rcldotnet_assemblies.dll
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2_console\bin\Debug\netcoreapp2.1\rcldotnet_common.dll
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2_console\bin\Debug\netcoreapp2.1\sensor_msgs_assemblies.dll
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2_console\bin\Debug\netcoreapp2.1\std_msgs_assemblies.dll
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2_console\bin\Debug\netcoreapp2.1\Tech MCS Angle SDK.dll
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2_console\bin\Debug\netcoreapp2.1\Tech MCS SDK.dll
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2_console\obj\Debug\netcoreapp2.1\TechMCS_ROS2.csproj.CoreCompileInputs.cache
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2_console\obj\Debug\netcoreapp2.1\TechMCS_ROS2.AssemblyInfoInputs.cache
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2_console\obj\Debug\netcoreapp2.1\TechMCS_ROS2.AssemblyInfo.cs
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2_console\obj\Debug\netcoreapp2.1\TechMCS_ROS2.csproj.CopyComplete
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2_console\obj\Debug\netcoreapp2.1\TechMCS_ROS2.dll
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2_console\obj\Debug\netcoreapp2.1\TechMCS_ROS2.pdb
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2\bin\Debug\netcoreapp2.1\TechMCS_ROS2.deps.json
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2\bin\Debug\netcoreapp2.1\TechMCS_ROS2.runtimeconfig.json
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2\bin\Debug\netcoreapp2.1\TechMCS_ROS2.runtimeconfig.dev.json
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2\bin\Debug\netcoreapp2.1\TechMCS_ROS2.dll
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2\bin\Debug\netcoreapp2.1\TechMCS_ROS2.pdb
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2\bin\Debug\netcoreapp2.1\builtin_interfaces_assemblies.dll
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2\bin\Debug\netcoreapp2.1\geometry_msgs_assemblies.dll
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2\bin\Debug\netcoreapp2.1\MatrixLibrary.dll
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2\bin\Debug\netcoreapp2.1\rcldotnet_assemblies.dll
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2\bin\Debug\netcoreapp2.1\rcldotnet_common.dll
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2\bin\Debug\netcoreapp2.1\sensor_msgs_assemblies.dll
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2\bin\Debug\netcoreapp2.1\std_msgs_assemblies.dll
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2\bin\Debug\netcoreapp2.1\Tech MCS Angle SDK.dll
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2\bin\Debug\netcoreapp2.1\Tech MCS SDK.dll
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2\obj\Debug\netcoreapp2.1\TechMCS_ROS2.csproj.CoreCompileInputs.cache
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2\obj\Debug\netcoreapp2.1\TechMCS_ROS2.AssemblyInfoInputs.cache
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2\obj\Debug\netcoreapp2.1\TechMCS_ROS2.AssemblyInfo.cs
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2\obj\Debug\netcoreapp2.1\TechMCS_ROS2.csproj.CopyComplete
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2\obj\Debug\netcoreapp2.1\TechMCS_ROS2.dll
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2\obj\Debug\netcoreapp2.1\TechMCS_ROS2.pdb
+D:\git\MOCAP4ROS2\TechMCS_ROS2\TechMCS_ROS2\obj\Debug\netcoreapp2.1\TechMCS_ROS2.csprojAssemblyReference.cache

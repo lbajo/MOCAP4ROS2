@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <AssemblyName>TechMCS_ROS2</AssemblyName>
+    <RootNamespace>TechMCS_ROS2</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="builtin_interfaces_assemblies">
+      <HintPath>ROS2\builtin_interfaces_assemblies.dll</HintPath>
+    </Reference>
+    <Reference Include="geometry_msgs_assemblies">
+      <HintPath>ROS2\geometry_msgs_assemblies.dll</HintPath>
+    </Reference>
+    <Reference Include="MatrixLibrary">
+      <HintPath>TechMCS_SDK\MatrixLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="rcldotnet_assemblies">
+      <HintPath>ROS2\rcldotnet_assemblies.dll</HintPath>
+    </Reference>
+    <Reference Include="rcldotnet_common">
+      <HintPath>ROS2\rcldotnet_common.dll</HintPath>
+    </Reference>
+    <Reference Include="sensor_msgs_assemblies">
+      <HintPath>ROS2\sensor_msgs_assemblies.dll</HintPath>
+    </Reference>
+    <Reference Include="std_msgs_assemblies">
+      <HintPath>ROS2\std_msgs_assemblies.dll</HintPath>
+    </Reference>
+    <Reference Include="Tech MCS Angle SDK">
+      <HintPath>TechMCS_SDK\Tech MCS Angle SDK.dll</HintPath>
+    </Reference>
+    <Reference Include="Tech MCS SDK">
+      <HintPath>TechMCS_SDK\Tech MCS SDK.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
