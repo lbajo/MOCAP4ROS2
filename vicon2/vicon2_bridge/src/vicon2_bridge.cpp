@@ -153,7 +153,7 @@ void ViconBridge::set_settings_vicon()
 
   if(publish_markers_)
   {
-    marker_pub_ = vicon_node->create_publisher<vicon2_msgs::msg::Markers>(tracked_frame_suffix_ + "/markers");
+    marker_pub_ = vicon_node->create_publisher<vicon2_msgs::msg::Markers>(tracked_frame_suffix_ + "/markers", 100);
   }
 }
 
