@@ -9,12 +9,8 @@
 
   <license>BSD</license>
 
-  <!--url>http://ros.org/wiki/vicon_bridge</url-->
-
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <!--build_depend>diagnostic_updater</build_depend-->
-  <!--build_depend>dynamic_reconfigure</build_depend-->
   <build_depend>geometry_msgs</build_depend>
   <build_depend>message_generation</build_depend>
   <build_depend>rclcpp</build_depend>
@@ -23,10 +19,10 @@
   <build_depend>tf2_msgs</build_depend>
   <build_depend>vicon2_msgs</build_depend>
 
-  <!--exec_depend>diagnostic_updater</exec_depend-->
-  <!--exec_depend>dynamic_reconfigure</exec_depend-->
   <exec_depend>geometry_msgs</exec_depend>
-  <exec_depend>message_runtime</exec_depend>
+  <!--exec_depend>message_runtime</exec_depend-->
+  <!-- message_runtime renamed in ROS 2 to rosidl_default_runtime
+  and do not need to be found by CMake-->
   <exec_depend>rclcpp</exec_depend>
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>tf2</exec_depend>

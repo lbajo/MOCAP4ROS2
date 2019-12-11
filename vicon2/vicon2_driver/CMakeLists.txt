@@ -108,7 +108,6 @@ install(DIRECTORY
 ament_export_include_directories(include)
 ament_export_libraries(${PROJECT_NAME})
 ament_export_dependencies(geometry_msgs)
-ament_export_dependencies(message_runtime)
 ament_export_dependencies(rclcpp)
 ament_export_dependencies(vicon2_msgs)
 ament_package()
