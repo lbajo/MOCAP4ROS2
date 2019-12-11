@@ -14,7 +14,9 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <build_depend>geometry_msgs</build_depend>
-  <build_depend>message_generation</build_depend>
+  <!--build_depend>message_generation</build_depend-->
+  <!-- message_generation renamed in ROS 2 to rosidl_default_generators-->
+  <build_depend>rosidl_default_generators</build_depend>
   <build_depend>rclcpp</build_depend>
   <build_depend>std_msgs</build_depend>
   <build_depend>tf2</build_depend>
