@@ -25,8 +25,8 @@ set(dependencies
     tf2
     tf2_ros
     vicon2_msgs
+    geometry_msgs
 )
-
 
 add_library(${PROJECT_NAME} SHARED src/mocap_camera_composer.cpp)
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
