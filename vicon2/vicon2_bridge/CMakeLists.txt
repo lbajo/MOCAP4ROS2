@@ -18,7 +18,7 @@ find_package(tf2_ros REQUIRED)
 find_package(vicon2_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
-find_package(Boost REQUIRED COMPONENTS thread)
+#find_package(Boost REQUIRED COMPONENTS thread)
 
 # check for platform and use the right Vicon SDK
 if(CMAKE_SIZEOF_VOID_P MATCHES "8")

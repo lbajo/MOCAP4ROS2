@@ -18,8 +18,6 @@ find_package(tf2_ros REQUIRED)
 find_package(vicon2_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
-find_package(Boost REQUIRED COMPONENTS thread)
-
 set(dependencies
     rclcpp
     tf2
@@ -28,9 +26,9 @@ set(dependencies
     geometry_msgs
 )
 
+include_directories(include)
 add_library(${PROJECT_NAME} SHARED src/mocap_camera_composer.cpp)
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
-target_link_libraries(mocap_camera_composer ${PROJECT_NAME})
 
 install(TARGETS
   ${PROJECT_NAME}
