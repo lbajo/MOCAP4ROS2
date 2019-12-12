@@ -18,6 +18,7 @@ find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(vicon2_msgs REQUIRED)
 
+
 find_package(Boost REQUIRED COMPONENTS thread)
 
 # check for platform and use the right Vicon SDK
