@@ -17,10 +17,8 @@ find_package(rclcpp REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(vicon2_msgs REQUIRED)
-#find_package(vicon2_bridge REQUIRED)
 
 find_package(Boost REQUIRED COMPONENTS thread)
-find_package(rosidl_default_generators REQUIRED)
 
 # check for platform and use the right Vicon SDK
 if(CMAKE_SIZEOF_VOID_P MATCHES "8")
@@ -34,6 +32,14 @@ elseif(CMAKE_SIZEOF_VOID_P MATCHES "4")
 else(CMAKE_SIZEOF_VOID_P MATCHES "8")
     message(FATAL_ERROR "unable to detect platform")
 endif (CMAKE_SIZEOF_VOID_P MATCHES "8")
+
+set(dependencies
+    rclcpp
+    geometry_msgs
+    tf2
+    tf2_ros
+    vicon2_msgs
+)
 
 find_library(VICON_SDK_LIBRARY ViconDataStreamSDK_CPP PATHS ${VICON_SDK_LINK_DIR})
 find_library(VICON_DEBUG_SERVICES_LIBRARY DebugServices PATHS ${VICON_SDK_LINK_DIR})
@@ -50,60 +56,37 @@ include_directories(include
   vicon_sdk/Vicon_SDK_1.3_Linux/64-bit
 )
 
-add_library(${PROJECT_NAME} SHARED
-  src/vicon2_bridge.cpp
-)
-ament_target_dependencies(${PROJECT_NAME}
-  "rclcpp"
-  "std_msgs"
-)
+add_library(${PROJECT_NAME} SHARED src/vicon2_bridge.cpp)
+ament_target_dependencies(${PROJECT_NAME} ${dependencies})
 
 add_executable(vicon2_bridge_main
   src/vicon2_bridge_main.cpp
 )
+ament_target_dependencies(vicon2_bridge_main ${dependencies})
 target_link_libraries(vicon2_bridge_main
   ${PROJECT_NAME}
   ${VICON_SDK_LIBRARY}
   ${VICON_DEBUG_SERVICES_LIBRARY}
 )
-ament_target_dependencies(vicon2_bridge_main
-  "rclcpp"
-  "std_msgs"
-)
 
+ament_target_dependencies(vicon2_bridge ${dependencies})
 target_link_libraries(vicon2_bridge
-#  msvc_bridge
   ${VICON_SDK_LIBRARY}
   ${VICON_DEBUG_SERVICES_LIBRARY}
 )
-ament_target_dependencies(vicon2_bridge
-  "rclcpp"
-  "vicon2_msgs"
-  "tf2"
-  "tf2_ros"
+
+install(TARGETS
+  ${PROJECT_NAME}
+  vicon2_bridge_main
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
 endif()
-
-install(TARGETS
-  #msvc_bridge
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  RUNTIME DESTINATION bin
-)
-
-install(TARGETS
-  vicon2_bridge_main
-  DESTINATION lib/${PROJECT_NAME}
-)
-
-install(DIRECTORY
-  launch
-  DESTINATION share/${PROJECT_NAME}
-)
 
 ament_export_include_directories(include)
 ament_export_libraries(${PROJECT_NAME})
