@@ -12,12 +12,11 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 find_package(ament_cmake REQUIRED)
-find_package(geometry_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(vicon2_msgs REQUIRED)
-
+find_package(geometry_msgs REQUIRED)
 
 find_package(Boost REQUIRED COMPONENTS thread)
 
@@ -36,7 +35,6 @@ endif (CMAKE_SIZEOF_VOID_P MATCHES "8")
 
 set(dependencies
     rclcpp
-    geometry_msgs
     tf2
     tf2_ros
     vicon2_msgs
@@ -51,8 +49,6 @@ message(STATUS "VICON_SDK " ${VICON_SDK})
 message(STATUS "VICON_SDK_INCLUDE_DIR " ${VICON_SDK_INCLUDE_DIR})
 
 include_directories(include
-  ${rclcpp_INCLUDE_DIRS}
-  ${geometry_msgs_INCLUDE_DIRS}
   ${VICON_SDK_INCLUDE_DIR}
   vicon_sdk/Vicon_SDK_1.3_Linux/64-bit
 )
@@ -91,7 +87,5 @@ endif()
 
 ament_export_include_directories(include)
 ament_export_libraries(${PROJECT_NAME})
-ament_export_dependencies(geometry_msgs)
-ament_export_dependencies(rclcpp)
-ament_export_dependencies(vicon2_msgs)
+ament_export_dependencies(${dependencies})
 ament_package()
