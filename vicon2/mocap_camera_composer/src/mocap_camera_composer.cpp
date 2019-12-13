@@ -14,7 +14,7 @@
 //
 // Author: David Vargas Frutos <david.vargas@urjc.es>
 
-#include "mocap_camera_composer/mocap_camera_composer.h"
+#include "mocap_camera_composer/mocap_camera_composer.hpp"
 #include <string>
 #include <vector>
 #include <memory>

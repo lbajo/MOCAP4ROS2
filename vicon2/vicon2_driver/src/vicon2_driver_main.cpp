@@ -14,7 +14,7 @@
 //
 // Author: David Vargas Frutos <david.vargas@urjc.es>
 
-#include "vicon2_driver/vicon2_driver.h"
+#include "vicon2_driver/vicon2_driver.hpp"
 #include <iostream>
 
 int main(int argc, char * argv[])
