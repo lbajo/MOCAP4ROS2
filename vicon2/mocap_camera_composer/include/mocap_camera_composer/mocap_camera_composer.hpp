@@ -14,8 +14,8 @@
 //
 // Author: David Vargas Frutos <david.vargas@urjc.es>
 
-#ifndef MOCAP_CAMERA_COMPOSER_H_
-#define MOCAP_CAMERA_COMPOSER_H_
+#ifndef MOCAP_CAMERA_COMPOSER__MOCAP_CAMERA_COMPOSER_HPP_
+#define MOCAP_CAMERA_COMPOSER__MOCAP_CAMERA_COMPOSER_HPP_
 
 #include <iostream>
 #include <sstream>
@@ -51,4 +51,4 @@ private:
   // const rclcpp::Time& frame_time);
   void marker_to_tf(const vicon2_msgs::msg::Markers::SharedPtr markers_msg);
 };
-#endif  // MOCAP_CAMERA_COMPOSER_H_"
+#endif  // MOCAP_CAMERA_COMPOSER__MOCAP_CAMERA_COMPOSER_HPP_

@@ -14,8 +14,8 @@
 //
 // Author: David Vargas Frutos <david.vargas@urjc.es>
 
-#ifndef VICON2_DRIVER_H_
-#define VICON2_DRIVER_H_
+#ifndef VICON2_DRIVER_HPP_
+#define VICON2_DRIVER_HPP_
 
 #include <iostream>
 #include <sstream>
@@ -73,4 +73,4 @@ private:
     vicon2_msgs::msg::Marker marker,
     int marker_num, const rclcpp::Time & frame_time);
 };
-#endif  // VICON2_DRIVER_H_
+#endif  // VICON2_DRIVER_HPP_
