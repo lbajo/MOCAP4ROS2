@@ -219,11 +219,12 @@ void ViconDriver::process_markers(const rclcpp::Time & frame_time, unsigned int 
   {
     // Get the global marker translationSegmentPublisher
     ViconDataStreamSDK::CPP::Output_GetUnlabeledMarkerGlobalTranslation
-    _Output_GetUnlabeledMarkerGlobalTranslation =
+      _Output_GetUnlabeledMarkerGlobalTranslation =
       client.GetUnlabeledMarkerGlobalTranslation(UnlabeledMarkerIndex);
 
     if (_Output_GetUnlabeledMarkerGlobalTranslation.Result ==
-      ViconDataStreamSDK::CPP::Result::Success) {
+      ViconDataStreamSDK::CPP::Result::Success)
+    {
       vicon2_msgs::msg::Marker this_marker;
       this_marker.translation.x = _Output_GetUnlabeledMarkerGlobalTranslation.Translation[0];
       this_marker.translation.y = _Output_GetUnlabeledMarkerGlobalTranslation.Translation[1];
