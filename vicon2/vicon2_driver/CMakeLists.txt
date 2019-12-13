@@ -20,16 +20,16 @@ find_package(geometry_msgs REQUIRED)
 
 # check for platform and use the right Vicon SDK
 if(CMAKE_SIZEOF_VOID_P MATCHES "8")
-    set(VICON_SDK             vicon_sdk/Vicon_SDK_1.3_Linux/64-bit/)
+    set(VICON_SDK             ../vicon_sdk/Vicon_SDK_1.3_Linux/64-bit/)
     set(VICON_SDK_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/${VICON_SDK})
     set(VICON_SDK_LINK_DIR    ${PROJECT_SOURCE_DIR}/${VICON_SDK})
 elseif(CMAKE_SIZEOF_VOID_P MATCHES "4")
-    set(VICON_SDK             vicon_sdk/Vicon_SDK_1.3_Linux/32-bit/)
+    set(VICON_SDK             ../vicon_sdk/Vicon_SDK_1.3_Linux/32-bit/)
     set(VICON_SDK_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/${VICON_SDK})
     set(VICON_SDK_LINK_DIR    ${PROJECT_SOURCE_DIR}/${VICON_SDK})
-else(CMAKE_SIZEOF_VOID_P MATCHES "8")
+else()
     message(FATAL_ERROR "unable to detect platform")
-endif (CMAKE_SIZEOF_VOID_P MATCHES "8")
+endif()
 
 set(dependencies
     rclcpp

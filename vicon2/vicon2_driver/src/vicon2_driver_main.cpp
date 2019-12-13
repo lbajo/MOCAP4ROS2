@@ -1,5 +1,4 @@
 // Copyright 2019 Intelligent Robotics Lab
-// Author: David Vargas Frutos
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,8 +11,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//
+// Author: David Vargas Frutos <david.vargas@urjc.es>
 
-#include "vicon2_driver.h"
+#include "vicon2_driver/vicon2_driver.h"
 #include <iostream>
 
 int main(int argc, char * argv[])
@@ -22,8 +23,7 @@ int main(int argc, char * argv[])
 
   ViconDriver vd;
 
-  if(vd.connect_vicon())
-  {
+  if (vd.connect_vicon()) {
     vd.start_vicon();
   }
   vd.stop_vicon();
