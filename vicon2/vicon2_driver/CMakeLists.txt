@@ -70,6 +70,12 @@ target_link_libraries(vicon2_driver
   ${VICON_DEBUG_SERVICES_LIBRARY}
 )
 
+install(DIRECTORY include/
+  DESTINATION include/
+)
+
+install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
+
 install(TARGETS
   ${PROJECT_NAME}
   vicon2_driver_main

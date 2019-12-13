@@ -17,12 +17,11 @@
 from launch import LaunchDescription
 import launch_ros.actions
 
-
 def generate_launch_description():
     return LaunchDescription([
         launch_ros.actions.Node(
-            package='vicon2_bridge', node_executable='vicon2_bridge_main',
-            node_name='vicon_node', output='screen',
+            package='vicon2_driver', node_executable='vicon2_driver_main',
+            node_name='vicon_driver_node', output='screen',
             # parameters=[{'abc': 2}],
         )
         # executable = ExecutableInPackage(package='vicon2_bridge', executable='simpletest')
