@@ -27,6 +27,8 @@ research and innovation programme under grant agreement no. 732287.
 
 ### Vicon
 
+Note about submodules: `git clone --recurse-submodules https://github.com/IntelligentRoboticsLabs/MOCAP4ROS2.git`
+
 - Connect your computer/laptop to the same network as Vicon system is connected.
 - Run Nexus (Vicon software) and calibrate cameras (if required).
 - Launch the Vicon-ROS2 driver launcher: `ros2 launch vicon2_bridge vicon.launch.py`
