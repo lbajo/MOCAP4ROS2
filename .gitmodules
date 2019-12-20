@@ -1,0 +1,3 @@
+[submodule "ViconDataStreamSDK"]
+	path = ViconDataStreamSDK
+	url = https://github.com/dvargasfr/ViconDataStreamSDK
