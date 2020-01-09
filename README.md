@@ -21,21 +21,20 @@ research and innovation programme under grant agreement no. 732287.
 
 ***
 
+<p align="center"> 
+<img align="center" src="https://github.com/IntelligentRoboticsLabs/MOCAP4ROS2/blob/master/resources/mocap4ros_arch.png" 
+    alt="mocap4ros_arch" width="100%">
+</p>
+
+
 ## Guide
 
 [![Build Status](https://travis-ci.com/IntelligentRoboticsLabs/MOCAP4ROS2.svg?branch=master)](https://travis-ci.com/IntelligentRoboticsLabs/MOCAP4ROS2)
 
 ### Vicon
 
-Note about submodules: `git clone --recurse-submodules https://github.com/IntelligentRoboticsLabs/MOCAP4ROS2.git`
-
-- Connect your computer/laptop to the same network as Vicon system is connected.
-- Run Nexus (Vicon software) and calibrate cameras (if required).
-- Launch the Vicon-ROS2 driver launcher: `ros2 launch vicon2_bridge vicon.launch.py`
-- Check new topics where Vicon info is received in custom message format and TFs format.
+Read about Vicon prerequesites, instalation and usage guide [here](https://github.com/IntelligentRoboticsLabs/MOCAP4ROS2/blob/master/mocap4ros_drivers/vicon2_driver/README.md).
 
 ### TechMCS IMUs
 
-- Open `TechMCS_ROS2.sln` on Visual Studio 2017.
-- Connect Tech MCS IMUs to your computer.
-- Run the Visual Studio solution and check new topics where IMUs info is received.
+Read about TechMCS IMUs prerequesites, instalation and usage guide [here](https://github.com/IntelligentRoboticsLabs/MOCAP4ROS2/blob/master/mocap4ros_drivers/TechMCS_ROS2/README.md).
