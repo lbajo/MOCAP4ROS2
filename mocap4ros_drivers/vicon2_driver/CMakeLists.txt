@@ -35,7 +35,10 @@ set(dependencies
   mocap4ros_msgs
 )
 
-include_directories(include)
+
+include_directories(
+  include
+)
 
 add_library(${PROJECT_NAME} SHARED src/vicon2_driver.cpp)
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
