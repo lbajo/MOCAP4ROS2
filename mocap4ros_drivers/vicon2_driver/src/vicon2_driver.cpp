@@ -281,7 +281,8 @@ void ViconDriver::marker_to_tf(
   tf_broadcaster_->sendTransform(transforms);
 }
 
-ViconDriver::ViconDriver() : rclcpp_lifecycle::LifecycleNode("vicon_node")
+ViconDriver::ViconDriver(const rclcpp::NodeOptions node_options)
+  : rclcpp_lifecycle::LifecycleNode("vicon2_driver_node", node_options)
 {
   //vicon_node = rclcpp::Node::make_shared("vicon_node");
   //parameters_client = std::make_shared<rclcpp::SyncParametersClient>(vicon_node);
@@ -306,9 +307,12 @@ ViconDriver::ViconDriver() : rclcpp_lifecycle::LifecycleNode("vicon_node")
   auto future_result = client_change_state_->async_send_request(request);
   */
 
+  /*
   declare_parameter("test_param", "");
   get_parameter("test_param", params_file_);
   RCLCPP_INFO(get_logger(), "test_param [%s]", params_file_);
+  */
+
   /*
   declare_parameter("params_file", "");
   get_parameter("params_file", params_file_);
@@ -319,6 +323,8 @@ ViconDriver::ViconDriver() : rclcpp_lifecycle::LifecycleNode("vicon_node")
       "/vicon2_driver/change_state");
   update_pub_ = create_publisher<std_msgs::msg::Empty>("/vicon2_driver/update_notify",
     rclcpp::QoS(100));
+
+  initParameters();
 }
 
 using CallbackReturnT =
@@ -420,4 +426,23 @@ bool ViconDriver::connect_vicon()
   }
 
   return client.IsConnected().Connected;
+}
+
+void ViconDriver::initParameters() {
+  std::string paramName = "test_param";
+
+  // declare_parameter(paramName, "holahola");
+
+  declare_parameter<std::string>(paramName, "...");
+  get_parameter_or<std::string>(paramName, myParam, "...");
+  std::cout << "myParam: " << myParam << std::endl;
+  // get_parameter_or<std::string>(paramName, myParam, "...");
+
+  // if (get_parameter(paramName, paramVal)) {
+  if (get_parameter_or<std::string>(paramName, myParam, "...")) {
+      //myParam = paramVal.as_string();
+      RCLCPP_WARN(get_logger(), "The parameter '%s' is available, using YAML value: %s", paramName.c_str(), myParam.c_str());
+  } else {
+      RCLCPP_WARN(get_logger(), "The parameter '%s' is not available, using the default value: %s", paramName.c_str(), myParam.c_str());
+  }
 }

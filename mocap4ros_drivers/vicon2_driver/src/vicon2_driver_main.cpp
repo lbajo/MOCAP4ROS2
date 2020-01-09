@@ -21,34 +21,9 @@
 int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
-  /*
-  ViconDriver vd;
-  vd.set_settings_vicon();
-  if (vd.connect_vicon()) {
-    vd.start_vicon();
-  }
-  vd.stop_vicon();
-  */
-  /**/
   auto node = std::make_shared<ViconDriver>();
-  rclcpp_lifecycle::State state;
-  node->on_configure(state);
-  //rclcpp::spin(node->get_node_base_interface());
-  /**/
-  rclcpp::shutdown();
-
-  return 0;
-}
-
-/*
-int main(int argc, char ** argv)
-{
-  rclcpp::init(argc, argv);
-  auto node = std::make_shared<ViconDriver>();
-  //node->connect_vicon();
   rclcpp::spin(node->get_node_base_interface());
   rclcpp::shutdown();
 
   return 0;
 }
-*/

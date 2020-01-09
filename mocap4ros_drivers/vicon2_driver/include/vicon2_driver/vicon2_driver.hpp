@@ -55,7 +55,7 @@ public:
   std::string tf_ref_frame_id_;
   std::string tracked_frame_suffix_;
 
-  ViconDriver();
+  explicit ViconDriver(const rclcpp::NodeOptions options = rclcpp::NodeOptions());
 
   using CallbackReturnT =
     rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
@@ -70,12 +70,14 @@ public:
   void set_settings_vicon();
   void start_vicon();
   bool stop_vicon();
+  void initParameters();
 
 private:
   ViconDataStreamSDK::CPP::Client client;
   //rclcpp::Node::SharedPtr vicon_node;
   //std::shared_ptr<rclcpp::SyncParametersClient> parameters_client;
   rclcpp::Time now_time;
+  std::string myParam;
   rclcpp::Publisher<mocap4ros_msgs::msg::Markers>::SharedPtr marker_pub_;
   std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
   std::string stream_mode_;
@@ -91,7 +93,6 @@ private:
 
   std::string params_file_;
   rclcpp::Parameter my_parameter_;
-
 
   void process_frame();
   void process_markers(const rclcpp::Time & frame_time, unsigned int vicon_frame_num);
