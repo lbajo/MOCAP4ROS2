@@ -133,7 +133,7 @@ void ViconDriver::set_settings_vicon()
   );
 
   if (publish_markers_) {
-    marker_pub_ = vicon_node->create_publisher<mocap4ros_msgs::msg::Markers>(
+    marker_pub_ = create_publisher<mocap4ros_msgs::msg::Markers>(
       tracked_frame_suffix_ + "/markers", 100);
   }
 }
