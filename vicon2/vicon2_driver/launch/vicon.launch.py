@@ -14,16 +14,53 @@
 #
 # Author: David Vargas Frutos <david.vargas@urjc.es>
 
+import os
+from launch_ros.actions import Node
 from launch import LaunchDescription
-import launch_ros.actions
+from ament_index_python.packages import get_package_share_directory
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import ThisLaunchFileDir
 
 def generate_launch_description():
-    return LaunchDescription([
-        launch_ros.actions.Node(
-            package='vicon2_driver', node_executable='vicon2_driver_main',
-            node_name='vicon_driver_node', output='screen',
-            # parameters=[{'abc': 2}],
-        )
+    project_dir = get_package_share_directory('vicon2_driver')
+    params_file = LaunchConfiguration('params_file')
+
+    #configured_params = RewrittenYaml(
+    #        source_file=params_file)
+
+    declare_params_file_cmd = DeclareLaunchArgument(
+        'params_file',
+        default_value=os.path.join(project_dir, 'config', 'vicon_driver_params.yaml'),
+        description='Full path to the ROS2 parameters file to use for all launched nodes')
+
+    start_vicon2_driver_cmd = Node(
+        package='vicon2_driver',
+        node_executable='vicon2_driver_main',
+        node_name='vicon2_driver_node',
+        parameters=[{'params_file': params_file}],
+        #parameters=[get_package_share_directory('vicon2_driver')+'/config/vicon_driver_params.yaml'],
+        output='screen')
+
+    # Create the launch description and populate
+    ld = LaunchDescription()
+    ld.add_action(declare_params_file_cmd)
+    ld.add_action(start_vicon2_driver_cmd)
+
+    return ld
+
+    # return LaunchDescription([
+    #     launch_ros.actions.Node(
+    #         package='vicon2_driver',
+    #         node_executable='vicon2_driver_main',
+    #         node_name='vicon_node',
+    #         output='screen',
+    #         parameters=[{get_package_share_directory('vicon2_driver')+'/config/vicon_driver_params.yaml'}]
+    #     )
+    # ])
+
         # executable = ExecutableInPackage(package='vicon2_bridge', executable='simpletest')
         # name = 'simpletest'
         # launch_ros.actions.ExecuteProcess(
@@ -33,4 +70,3 @@ def generate_launch_description():
         #                            '--enable_tf_broadcast', "true",
         #                            output='screen']
         # )
-    ])
