@@ -133,11 +133,7 @@ void ViconDriver::set_settings_vicon()
   );
 
   if (publish_markers_) {
-<<<<<<< HEAD:vicon2/vicon2_driver/src/vicon2_driver.cpp
-    marker_pub_ = create_publisher<vicon2_msgs::msg::Markers>(
-=======
     marker_pub_ = vicon_node->create_publisher<mocap4ros_msgs::msg::Markers>(
->>>>>>> be483e388ece71ffb05abd0bfb56e6e35621df43:mocap4ros_drivers/vicon2_driver/src/vicon2_driver.cpp
       tracked_frame_suffix_ + "/markers", 100);
   }
 }
