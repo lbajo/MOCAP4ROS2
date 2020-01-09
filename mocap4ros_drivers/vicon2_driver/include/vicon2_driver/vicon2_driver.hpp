@@ -33,7 +33,6 @@
 #include "std_msgs/msg/empty.hpp"
 
 #include "rclcpp/rclcpp.hpp"
-#include "rclcpp/time.hpp"
 #include "rclcpp/node_interfaces/node_logging.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
@@ -44,14 +43,11 @@
 #include "tf2/buffer_core.h"
 #include "tf2_ros/transform_broadcaster.h"
 
-#include "rclcpp/node_interfaces/node_logging.hpp"
-
 #include "ViconDataStreamSDK/DataStreamClient.h"
 
 class ViconDriver : public rclcpp_lifecycle::LifecycleNode
 {
 public:
-
   std::string tf_ref_frame_id_;
   std::string tracked_frame_suffix_;
 
@@ -74,8 +70,8 @@ public:
 
 private:
   ViconDataStreamSDK::CPP::Client client;
-  //rclcpp::Node::SharedPtr vicon_node;
-  //std::shared_ptr<rclcpp::SyncParametersClient> parameters_client;
+  // rclcpp::Node::SharedPtr vicon_node;
+  // std::shared_ptr<rclcpp::SyncParametersClient> parameters_client;
   rclcpp::Time now_time;
   std::string myParam;
   rclcpp::Publisher<mocap4ros_msgs::msg::Markers>::SharedPtr marker_pub_;

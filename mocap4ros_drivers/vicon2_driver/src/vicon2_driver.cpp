@@ -240,7 +240,6 @@ void ViconDriver::process_markers(const rclcpp::Time & frame_time, unsigned int 
       marker_to_tf(this_marker, marker_cnt, frame_time);
       marker_cnt++;
     } else {
-
       RCLCPP_WARN(get_logger(),
         "GetUnlabeledMarkerGlobalTranslation failed (result = %s)",
         Enum2String(_Output_GetUnlabeledMarkerGlobalTranslation.Result).c_str());
@@ -282,11 +281,11 @@ void ViconDriver::marker_to_tf(
 }
 
 ViconDriver::ViconDriver(const rclcpp::NodeOptions node_options)
-  : rclcpp_lifecycle::LifecycleNode("vicon2_driver_node", node_options)
+: rclcpp_lifecycle::LifecycleNode("vicon2_driver_node", node_options)
 {
-  //vicon_node = rclcpp::Node::make_shared("vicon_node");
-  //parameters_client = std::make_shared<rclcpp::SyncParametersClient>(vicon_node);
-  //tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(vicon_node);
+  // vicon_node = rclcpp::Node::make_shared("vicon_node");
+  // parameters_client = std::make_shared<rclcpp::SyncParametersClient>(vicon_node);
+  // tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(vicon_node);
   tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(this);
   stream_mode_ = "ClientPull";
   host_name_ = "192.168.10.1:801";
@@ -320,9 +319,9 @@ ViconDriver::ViconDriver(const rclcpp::NodeOptions node_options)
   */
 
   client_change_state_ = this->create_client<lifecycle_msgs::srv::ChangeState>(
-      "/vicon2_driver/change_state");
-  update_pub_ = create_publisher<std_msgs::msg::Empty>("/vicon2_driver/update_notify",
-    rclcpp::QoS(100));
+    "/vicon2_driver/change_state");
+  update_pub_ = create_publisher<std_msgs::msg::Empty>(
+    "/vicon2_driver/update_notify", rclcpp::QoS(100));
 
   initParameters();
 }
@@ -394,27 +393,6 @@ ViconDriver::on_error(const rclcpp_lifecycle::State & state)
 
 bool ViconDriver::connect_vicon()
 {
-  //vicon_node->declare_parameter("foo");
-  //auto set_parameters_results = parameters_client->set_parameters({rclcpp::Parameter("foo", 2)});
-  /*
-  auto abc = my_parameter_.get_type();
-  RCLCPP_INFO(vicon_node->get_logger(), "params_file = %s", abc);*/
-  /*
-  for (auto & test_param : test_param_) {
-    RCLCPP_INFO(vicon_node->get_logger(), test_param.get_value<std::string>());
-  }
-
-  std::stringstream ss;
-  for (auto & parameter : parameters_client->get_parameters({"test_param", "abc", "foo"}))
-  {
-    ss << "\nParameter name: " << parameter.get_name();
-    ss << "\nParameter value (" << parameter.get_value() << "): " << parameter.value_to_string();
-  }
-  RCLCPP_INFO(vicon_node->get_logger(), ss.str().c_str());
-  RCLCPP_INFO(vicon_node->get_logger(), "test_param_ = %s", test_param_.c_str());
-  */
-
-
   RCLCPP_WARN(get_logger(),
     "Trying to connect to Vicon DataStream SDK at %s ...",
     host_name_.c_str());
@@ -428,21 +406,18 @@ bool ViconDriver::connect_vicon()
   return client.IsConnected().Connected;
 }
 
-void ViconDriver::initParameters() {
+void ViconDriver::initParameters()
+{
   std::string paramName = "test_param";
-
-  // declare_parameter(paramName, "holahola");
-
   declare_parameter<std::string>(paramName, "...");
-  get_parameter_or<std::string>(paramName, myParam, "...");
-  std::cout << "myParam: " << myParam << std::endl;
-  // get_parameter_or<std::string>(paramName, myParam, "...");
 
-  // if (get_parameter(paramName, paramVal)) {
   if (get_parameter_or<std::string>(paramName, myParam, "...")) {
-      //myParam = paramVal.as_string();
-      RCLCPP_WARN(get_logger(), "The parameter '%s' is available, using YAML value: %s", paramName.c_str(), myParam.c_str());
+    RCLCPP_WARN(get_logger(),
+      "The parameter '%s' is available, using YAML value: %s",
+      paramName.c_str(), myParam.c_str());
   } else {
-      RCLCPP_WARN(get_logger(), "The parameter '%s' is not available, using the default value: %s", paramName.c_str(), myParam.c_str());
+    RCLCPP_WARN(get_logger(),
+      "The parameter '%s' is not available, using the default value: %s",
+      paramName.c_str(), myParam.c_str());
   }
 }

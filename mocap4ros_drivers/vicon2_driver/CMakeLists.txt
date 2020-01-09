@@ -19,12 +19,6 @@ find_package(tf2_ros REQUIRED)
 find_package(mocap4ros_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
-# find_package(Boost QUIET REQUIRED COMPONENTS system thread)
-
-# if(NOT Boost_FOUND)
-#  message(FATAL_ERROR "Boost Not found")
-# endif()
-
 set(dependencies
   ament_index_cpp
   rclcpp
@@ -33,7 +27,6 @@ set(dependencies
   tf2_ros
   mocap4ros_msgs
 )
-
 
 include_directories(
   include

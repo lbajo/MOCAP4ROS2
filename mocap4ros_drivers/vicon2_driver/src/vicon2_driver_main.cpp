@@ -15,6 +15,7 @@
 // Author: David Vargas Frutos <david.vargas@urjc.es>
 
 #include <iostream>
+#include <memory>
 #include "vicon2_driver/vicon2_driver.hpp"
 #include "rclcpp/rclcpp.hpp"
 
