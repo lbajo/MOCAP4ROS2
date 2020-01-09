@@ -6,7 +6,16 @@ Get the official binaries released in the official download page [here](https://
 
 You can check the documentation [here](https://docs.vicon.com/spaces/viewspace.action?key=DSSDK19).
 
-Copy all the libraries to /usr/local/lib and the headers to /usr/local/include/ViconDataStreamSDK/.
+Copy all the libraries to /usr/local/lib and move the headers to /usr/local/include/ViconDataStreamSDK/.
+
+`sudo mv {YOUR_ViconDataStreamSDK}/Linux64/Release/* /usr/local/lib/`
+
+`cd /usr/local/include/`
+
+`sudo mkdir ViconDataStreamSDK`
+
+`sudo mv ../lib/*.h ViconDataStreamSDK/`
+
 
 ## Guide
 
