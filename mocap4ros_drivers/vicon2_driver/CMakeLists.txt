@@ -19,11 +19,11 @@ find_package(tf2_ros REQUIRED)
 find_package(mocap4ros_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
-find_package(Boost QUIET REQUIRED COMPONENTS system thread)
+# find_package(Boost QUIET REQUIRED COMPONENTS system thread)
 
-if(NOT Boost_FOUND)
-  message(FATAL_ERROR "Boost Not found")
-endif()
+# if(NOT Boost_FOUND)
+#  message(FATAL_ERROR "Boost Not found")
+# endif()
 
 set(dependencies
   ament_index_cpp
@@ -54,8 +54,8 @@ target_link_libraries(vicon2_driver_main
 ament_target_dependencies(vicon2_driver ${dependencies})
 target_link_libraries(vicon2_driver
   ViconDataStreamSDK_CPP
-  Boost::system
-  Boost::thread
+#  Boost::system
+#  Boost::thread
 )
 
 install(DIRECTORY include/
