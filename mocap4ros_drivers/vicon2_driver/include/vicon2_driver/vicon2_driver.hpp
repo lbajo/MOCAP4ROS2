@@ -48,9 +48,6 @@
 class ViconDriver : public rclcpp_lifecycle::LifecycleNode
 {
 public:
-  std::string tf_ref_frame_id_;
-  std::string tracked_frame_suffix_;
-
   explicit ViconDriver(const rclcpp::NodeOptions options = rclcpp::NodeOptions());
 
   using CallbackReturnT =
@@ -78,17 +75,16 @@ private:
   std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
   std::string stream_mode_;
   std::string host_name_;
+  std::string tf_ref_frame_id_;
+  std::string tracked_frame_suffix_;
   bool publish_markers_;
-  bool marker_data_enabled;
-  bool unlabeled_marker_data_enabled;
-  unsigned int lastFrameNumber;
-  unsigned int frameCount;
-  unsigned int droppedFrameCount;
-  unsigned int n_markers;
-  unsigned int n_unlabeled_markers;
-
-  std::string params_file_;
-  rclcpp::Parameter my_parameter_;
+  bool marker_data_enabled_;
+  bool unlabeled_marker_data_enabled_;
+  int lastFrameNumber_;
+  int frameCount_;
+  int droppedFrameCount_;
+  int n_markers_;
+  int n_unlabeled_markers_;
 
   void process_frame();
   void process_markers(const rclcpp::Time & frame_time, unsigned int vicon_frame_num);
