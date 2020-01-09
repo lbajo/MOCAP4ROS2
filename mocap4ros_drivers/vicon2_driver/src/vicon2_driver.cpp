@@ -166,24 +166,24 @@ void ViconDriver::process_frame()
   ViconDataStreamSDK::CPP::Output_GetFrameNumber OutputFrameNum = client.GetFrameNumber();
 
   int frameDiff = 0;
-  if (lastFrameNumber != 0) {
-    frameDiff = OutputFrameNum.FrameNumber - lastFrameNumber;
-    frameCount += frameDiff;
+  if (lastFrameNumber_ != 0) {
+    frameDiff = OutputFrameNum.FrameNumber - lastFrameNumber_;
+    frameCount_ += frameDiff;
     if ((frameDiff) > 1) {
-      droppedFrameCount += frameDiff;
-      double droppedFramePct = static_cast<double>(droppedFrameCount / frameCount * 100);
+      droppedFrameCount_ += frameDiff;
+      double droppedFramePct = static_cast<double>(droppedFrameCount_ / frameCount_ * 100);
 
       RCLCPP_DEBUG(get_logger(),
         "%d more (total %d / %d, %f %%) frame(s) dropped. Consider adjusting rates",
-        frameDiff, droppedFrameCount, frameCount, droppedFramePct);
+        frameDiff, droppedFrameCount_, frameCount_, droppedFramePct);
     }
   }
-  lastFrameNumber = OutputFrameNum.FrameNumber;
+  lastFrameNumber_ = OutputFrameNum.FrameNumber;
 
   if (frameDiff != 0) {
     rclcpp::Duration vicon_latency(client.GetLatencyTotal().Total);
     if (publish_markers_) {
-      process_markers(now_time - vicon_latency, lastFrameNumber);
+      process_markers(now_time - vicon_latency, lastFrameNumber_);
     }
     lastTime = now_time;
   }
@@ -192,23 +192,23 @@ void ViconDriver::process_frame()
 void ViconDriver::process_markers(const rclcpp::Time & frame_time, unsigned int vicon_frame_num)
 {
   int marker_cnt = 0;
-  if (!marker_data_enabled) {
-    marker_data_enabled = true;
+  if (!marker_data_enabled_) {
+    marker_data_enabled_ = true;
     client.EnableMarkerData();
 
     RCLCPP_INFO(get_logger(),
       "IsMarkerDataEnabled? %s",
       client.IsMarkerDataEnabled().Enabled ? "true" : "false");
   }
-  if (!unlabeled_marker_data_enabled) {
-    unlabeled_marker_data_enabled = true;
+  if (!unlabeled_marker_data_enabled_) {
+    unlabeled_marker_data_enabled_ = true;
     client.EnableUnlabeledMarkerData();
 
     RCLCPP_INFO(get_logger(),
       "IsUnlabeledMarkerDataEnabled? %s",
       client.IsUnlabeledMarkerDataEnabled().Enabled ? "true" : "false");
   }
-  n_markers = 0;
+  n_markers_ = 0;
   mocap4ros_msgs::msg::Markers markers_msg;
   markers_msg.header.stamp = frame_time;
   markers_msg.frame_number = vicon_frame_num;
@@ -216,8 +216,8 @@ void ViconDriver::process_markers(const rclcpp::Time & frame_time, unsigned int 
 
   RCLCPP_INFO(get_logger(),
     "# unlabeled markers: %d", UnlabeledMarkerCount);
-  n_markers += UnlabeledMarkerCount;
-  n_unlabeled_markers = UnlabeledMarkerCount;
+  n_markers_ += UnlabeledMarkerCount;
+  n_unlabeled_markers_ = UnlabeledMarkerCount;
   for (unsigned int UnlabeledMarkerIndex = 0;
     UnlabeledMarkerIndex < UnlabeledMarkerCount;
     ++UnlabeledMarkerIndex)
@@ -287,35 +287,11 @@ ViconDriver::ViconDriver(const rclcpp::NodeOptions node_options)
   // parameters_client = std::make_shared<rclcpp::SyncParametersClient>(vicon_node);
   // tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(vicon_node);
   tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(this);
-  stream_mode_ = "ClientPull";
-  host_name_ = "192.168.10.1:801";
-  tf_ref_frame_id_ = "vicon_world";
-  tracked_frame_suffix_ = "vicon";
-  publish_markers_ = true;
-  marker_data_enabled = false;
-  unlabeled_marker_data_enabled = false;
-  lastFrameNumber = 0;
-  frameCount = 0;
-  droppedFrameCount = 0;
-  n_markers = 0;
-  n_unlabeled_markers = 0;
 
   /*
   auto request = std::make_shared<lifecycle_msgs::srv::ChangeState::Request>();
   request->transition.id = lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE;
   auto future_result = client_change_state_->async_send_request(request);
-  */
-
-  /*
-  declare_parameter("test_param", "");
-  get_parameter("test_param", params_file_);
-  RCLCPP_INFO(get_logger(), "test_param [%s]", params_file_);
-  */
-
-  /*
-  declare_parameter("params_file", "");
-  get_parameter("params_file", params_file_);
-  RCLCPP_INFO(get_logger(), "params_file [%s]", params_file_);
   */
 
   client_change_state_ = this->create_client<lifecycle_msgs::srv::ChangeState>(
@@ -332,10 +308,10 @@ using CallbackReturnT =
 CallbackReturnT
 ViconDriver::on_configure(const rclcpp_lifecycle::State & state)
 {
-  RCLCPP_INFO(get_logger(), "State [%s]", state.label());
-  RCLCPP_INFO(get_logger(), "[%s] Configuring...", get_name());
-  /*...*/
-  RCLCPP_INFO(get_logger(), "[%s] Configured", get_name());
+  RCLCPP_INFO(get_logger(), "State id [%d]", get_current_state().id());
+  RCLCPP_INFO(get_logger(), "State label [%s]", get_current_state().label().c_str());
+  /* Configuring stuff */
+  RCLCPP_INFO(get_logger(), "Configured!\n");
 
   return CallbackReturnT::SUCCESS;
 }
@@ -343,10 +319,11 @@ ViconDriver::on_configure(const rclcpp_lifecycle::State & state)
 CallbackReturnT
 ViconDriver::on_activate(const rclcpp_lifecycle::State & state)
 {
-  RCLCPP_INFO(get_logger(), "State [%s]", state.label());
-  RCLCPP_INFO(get_logger(), "[%s] Activating...", get_name());
+  RCLCPP_INFO(get_logger(), "State id [%d]", get_current_state().id());
+  RCLCPP_INFO(get_logger(), "State label [%s]", get_current_state().label().c_str());
   update_pub_->on_activate();
-  RCLCPP_INFO(get_logger(), "[%s] Activated", get_name());
+  connect_vicon();
+  RCLCPP_INFO(get_logger(), "Activated!\n");
 
   return CallbackReturnT::SUCCESS;
 }
@@ -354,10 +331,10 @@ ViconDriver::on_activate(const rclcpp_lifecycle::State & state)
 CallbackReturnT
 ViconDriver::on_deactivate(const rclcpp_lifecycle::State & state)
 {
-  RCLCPP_INFO(get_logger(), "State [%s]", state.label());
-  RCLCPP_INFO(get_logger(), "[%s] Deactivating...", get_name());
+  RCLCPP_INFO(get_logger(), "State id [%d]", get_current_state().id());
+  RCLCPP_INFO(get_logger(), "State label [%s]", get_current_state().label().c_str());
   update_pub_->on_deactivate();
-  RCLCPP_INFO(get_logger(), "[%s] Deactivated", get_name());
+  RCLCPP_INFO(get_logger(), "Deactivated!\n");
 
   return CallbackReturnT::SUCCESS;
 }
@@ -365,9 +342,10 @@ ViconDriver::on_deactivate(const rclcpp_lifecycle::State & state)
 CallbackReturnT
 ViconDriver::on_cleanup(const rclcpp_lifecycle::State & state)
 {
-  RCLCPP_INFO(get_logger(), "State [%s]", state.label());
-  RCLCPP_INFO(get_logger(), "[%s] Cleaning up...", get_name());
-  RCLCPP_INFO(get_logger(), "[%s] Cleaned up", get_name());
+  RCLCPP_INFO(get_logger(), "State id [%d]", get_current_state().id());
+  RCLCPP_INFO(get_logger(), "State label [%s]", get_current_state().label().c_str());
+  /* Clean up stuff */
+  RCLCPP_INFO(get_logger(), "Cleaned up!\n");
 
   return CallbackReturnT::SUCCESS;
 }
@@ -375,9 +353,10 @@ ViconDriver::on_cleanup(const rclcpp_lifecycle::State & state)
 CallbackReturnT
 ViconDriver::on_shutdown(const rclcpp_lifecycle::State & state)
 {
-  RCLCPP_INFO(get_logger(), "State [%s]", state.label());
-  RCLCPP_INFO(get_logger(), "[%s] Shutting down...", get_name());
-  RCLCPP_INFO(get_logger(), "[%s] Shutted down", get_name());
+  RCLCPP_INFO(get_logger(), "State id [%d]", get_current_state().id());
+  RCLCPP_INFO(get_logger(), "State label [%s]", get_current_state().label().c_str());
+  /* Shut down stuff */
+  RCLCPP_INFO(get_logger(), "Shutted down!\n");
 
   return CallbackReturnT::SUCCESS;
 }
@@ -385,8 +364,8 @@ ViconDriver::on_shutdown(const rclcpp_lifecycle::State & state)
 CallbackReturnT
 ViconDriver::on_error(const rclcpp_lifecycle::State & state)
 {
-  RCLCPP_INFO(get_logger(), "State [%s]", state.label());
-  RCLCPP_ERROR(get_logger(), "[%s] Error transition", get_name());
+  RCLCPP_INFO(get_logger(), "State id [%d]", get_current_state().id());
+  RCLCPP_INFO(get_logger(), "State label [%s]", get_current_state().label().c_str());
 
   return CallbackReturnT::SUCCESS;
 }
@@ -408,16 +387,54 @@ bool ViconDriver::connect_vicon()
 
 void ViconDriver::initParameters()
 {
-  std::string paramName = "test_param";
-  declare_parameter<std::string>(paramName, "...");
+  declare_parameter<std::string>("stream_mode", "ClientPull");
+  declare_parameter<std::string>("host_name", "192.168.10.1:801");
+  declare_parameter<std::string>("tf_ref_frame_id", "vicon_world");
+  declare_parameter<std::string>("tracked_frame_suffix", "vicon");
+  declare_parameter<bool>("publish_markers", false);
+  declare_parameter<bool>("marker_data_enabled", false);
+  declare_parameter<bool>("unlabeled_marker_data_enabled", false);
+  declare_parameter<int>("lastFrameNumber", 0);
+  declare_parameter<int>("frameCount", 0);
+  declare_parameter<int>("droppedFrameCount", 0);
+  declare_parameter<int>("n_markers", 0);
+  declare_parameter<int>("n_unlabeled_markers", 0);
 
-  if (get_parameter_or<std::string>(paramName, myParam, "...")) {
-    RCLCPP_WARN(get_logger(),
-      "The parameter '%s' is available, using YAML value: %s",
-      paramName.c_str(), myParam.c_str());
-  } else {
-    RCLCPP_WARN(get_logger(),
-      "The parameter '%s' is not available, using the default value: %s",
-      paramName.c_str(), myParam.c_str());
-  }
+  get_parameter<std::string>("stream_mode", stream_mode_);
+  get_parameter<std::string>("host_name", host_name_);
+  get_parameter<std::string>("tf_ref_frame_id", tf_ref_frame_id_);
+  get_parameter<std::string>("tracked_frame_suffix", tracked_frame_suffix_);
+  get_parameter<bool>("publish_markers", publish_markers_);
+  get_parameter<bool>("marker_data_enabled", marker_data_enabled_);
+  get_parameter<bool>("unlabeled_marker_data_enabled", unlabeled_marker_data_enabled_);
+  get_parameter<int>("lastFrameNumber", lastFrameNumber_);
+  get_parameter<int>("frameCount", frameCount_);
+  get_parameter<int>("droppedFrameCount", droppedFrameCount_);
+  get_parameter<int>("n_markers", n_markers_);
+  get_parameter<int>("n_unlabeled_markers", n_unlabeled_markers_);
+
+  RCLCPP_WARN(get_logger(),
+    "Param stream_mode: %s", stream_mode_.c_str());
+  RCLCPP_WARN(get_logger(),
+    "Param host_name: %s", host_name_.c_str());
+  RCLCPP_WARN(get_logger(),
+    "Param tf_ref_frame_id: %s", tf_ref_frame_id_.c_str());
+  RCLCPP_WARN(get_logger(),
+    "Param tracked_frame_suffix: %s", tracked_frame_suffix_.c_str());
+  RCLCPP_WARN(get_logger(),
+    "Param publish_markers: %s", publish_markers_?"true":"false");
+  RCLCPP_WARN(get_logger(),
+    "Param marker_data_enabled: %s", marker_data_enabled_?"true":"false");
+  RCLCPP_WARN(get_logger(),
+    "Param unlabeled_marker_data_enabled: %s", unlabeled_marker_data_enabled_?"true":"false");
+  RCLCPP_WARN(get_logger(),
+    "Param lastFrameNumber: %d", lastFrameNumber_);
+  RCLCPP_WARN(get_logger(),
+    "Param frameCount: %d", frameCount_);
+  RCLCPP_WARN(get_logger(),
+    "Param droppedFrameCount: %d", droppedFrameCount_);
+  RCLCPP_WARN(get_logger(),
+    "Param n_markers: %d", n_markers_);
+  RCLCPP_WARN(get_logger(),
+    "Param n_unlabeled_markers: %d", n_unlabeled_markers_);
 }
