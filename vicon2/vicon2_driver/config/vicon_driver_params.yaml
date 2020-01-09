@@ -1,3 +1,0 @@
-vicon2_driver_main:
-  ros__parameters:
-    test_param: "abc"
