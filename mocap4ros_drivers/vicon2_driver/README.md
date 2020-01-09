@@ -16,6 +16,10 @@ Copy all the libraries to /usr/local/lib and move the headers to /usr/local/incl
 
 `sudo mv ../lib/*.h ViconDataStreamSDK/`
 
+Update the `LD_LIBRARY_PATH` environment variable:
+
+`export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/`
+
 
 ## Guide
 
@@ -23,6 +27,6 @@ Copy all the libraries to /usr/local/lib and move the headers to /usr/local/incl
 
 - Run Nexus (Vicon software) and calibrate cameras (if required).
 
-- Launch the Vicon-ROS2 driver launcher: `ros2 launch vicon2_bridge vicon.launch.py`
+- Launch the Vicon-ROS2 driver launcher: `ros2 launch vicon2_driver vicon2.launch.py`
 
 - Check new topics where Vicon info is received in custom message format and TFs format.
