@@ -14,10 +14,11 @@
 //
 // Author: David Vargas Frutos <david.vargas@urjc.es>
 
-#include "vicon2_driver/vicon2_driver.hpp"
 #include <string>
 #include <vector>
 #include <memory>
+#include "vicon2_driver/vicon2_driver.hpp"
+#include "lifecycle_msgs/msg/state.hpp"
 
 using std::min;
 using std::max;
@@ -101,38 +102,38 @@ void ViconDriver::set_settings_vicon()
   } else if (stream_mode_ == "ClientPull") {
     result = client.SetStreamMode(ViconDataStreamSDK::CPP::StreamMode::ClientPull).Result;
   } else {
-    RCLCPP_FATAL(vicon_node->get_logger(),
-      "Unknown stream mode -- options are ServerPush, ClientPull");
+    RCLCPP_FATAL(get_logger(), "Unknown stream mode -- options are ServerPush, ClientPull");
     rclcpp::shutdown();
   }
 
-  RCLCPP_INFO(vicon_node->get_logger(),
-    "Setting Stream Mode to %s : %s",
+  RCLCPP_INFO(get_logger(), "Setting Stream Mode to %s : %s",
     stream_mode_.c_str(), Enum2String(result).c_str());
 
   client.SetAxisMapping(ViconDataStreamSDK::CPP::Direction::Forward,
     ViconDataStreamSDK::CPP::Direction::Left, ViconDataStreamSDK::CPP::Direction::Up);
   ViconDataStreamSDK::CPP::Output_GetAxisMapping _Output_GetAxisMapping = client.GetAxisMapping();
 
-  RCLCPP_INFO(vicon_node->get_logger(), "Axis Mapping: X-%s Y-%s Z-%s",
+  RCLCPP_INFO(get_logger(), "Axis Mapping: X-%s Y-%s Z-%s",
     Enum2String(_Output_GetAxisMapping.XAxis).c_str(),
     Enum2String(_Output_GetAxisMapping.YAxis).c_str(),
     Enum2String(_Output_GetAxisMapping.ZAxis).c_str());
 
   client.EnableSegmentData();
-  RCLCPP_INFO(vicon_node->get_logger(),
+
+  RCLCPP_INFO(get_logger(),
     "IsSegmentDataEnabled? %s",
     client.IsSegmentDataEnabled().Enabled ? "true" : "false");
 
   ViconDataStreamSDK::CPP::Output_GetVersion _Output_GetVersion = client.GetVersion();
-  RCLCPP_INFO(vicon_node->get_logger(), "Version: %d.%d.%d",
+
+  RCLCPP_INFO(get_logger(), "Version: %d.%d.%d",
     _Output_GetVersion.Major,
     _Output_GetVersion.Minor,
     _Output_GetVersion.Point
   );
 
   if (publish_markers_) {
-    marker_pub_ = vicon_node->create_publisher<vicon2_msgs::msg::Markers>(
+    marker_pub_ = create_publisher<vicon2_msgs::msg::Markers>(
       tracked_frame_suffix_ + "/markers", 100);
   }
 }
@@ -143,19 +144,19 @@ void ViconDriver::start_vicon()
   rclcpp::WallRate d(1.0 / 240.0);
   while (rclcpp::ok()) {
     while (client.GetFrame().Result != ViconDataStreamSDK::CPP::Result::Success && rclcpp::ok()) {
-      // RCLCPP_INFO(vicon_node->get_logger(), "getFrame returned false");
+      RCLCPP_INFO(get_logger(), "getFrame returned false");
       d.sleep();
     }
-    now_time = vicon_node->now();
+    now_time = this->now();
     process_frame();
   }
 }
 
 bool ViconDriver::stop_vicon()
 {
-  RCLCPP_INFO(vicon_node->get_logger(), "Disconnecting from Vicon DataStream SDK");
+  RCLCPP_INFO(get_logger(), "Disconnecting from Vicon DataStream SDK");
   client.Disconnect();
-  RCLCPP_INFO(vicon_node->get_logger(), "... disconnected");
+  RCLCPP_INFO(get_logger(), "... disconnected");
   return true;
 }
 
@@ -171,7 +172,8 @@ void ViconDriver::process_frame()
     if ((frameDiff) > 1) {
       droppedFrameCount += frameDiff;
       double droppedFramePct = static_cast<double>(droppedFrameCount / frameCount * 100);
-      RCLCPP_DEBUG(vicon_node->get_logger(),
+
+      RCLCPP_DEBUG(get_logger(),
         "%d more (total %d / %d, %f %%) frame(s) dropped. Consider adjusting rates",
         frameDiff, droppedFrameCount, frameCount, droppedFramePct);
     }
@@ -193,14 +195,16 @@ void ViconDriver::process_markers(const rclcpp::Time & frame_time, unsigned int 
   if (!marker_data_enabled) {
     marker_data_enabled = true;
     client.EnableMarkerData();
-    RCLCPP_INFO(vicon_node->get_logger(),
+
+    RCLCPP_INFO(get_logger(),
       "IsMarkerDataEnabled? %s",
       client.IsMarkerDataEnabled().Enabled ? "true" : "false");
   }
   if (!unlabeled_marker_data_enabled) {
     unlabeled_marker_data_enabled = true;
     client.EnableUnlabeledMarkerData();
-    RCLCPP_INFO(vicon_node->get_logger(),
+
+    RCLCPP_INFO(get_logger(),
       "IsUnlabeledMarkerDataEnabled? %s",
       client.IsUnlabeledMarkerDataEnabled().Enabled ? "true" : "false");
   }
@@ -209,7 +213,8 @@ void ViconDriver::process_markers(const rclcpp::Time & frame_time, unsigned int 
   markers_msg.header.stamp = frame_time;
   markers_msg.frame_number = vicon_frame_num;
   unsigned int UnlabeledMarkerCount = client.GetUnlabeledMarkerCount().MarkerCount;
-  RCLCPP_INFO(vicon_node->get_logger(),
+
+  RCLCPP_INFO(get_logger(),
     "# unlabeled markers: %d", UnlabeledMarkerCount);
   n_markers += UnlabeledMarkerCount;
   n_unlabeled_markers = UnlabeledMarkerCount;
@@ -235,7 +240,8 @@ void ViconDriver::process_markers(const rclcpp::Time & frame_time, unsigned int 
       marker_to_tf(this_marker, marker_cnt, frame_time);
       marker_cnt++;
     } else {
-      RCLCPP_WARN(vicon_node->get_logger(),
+
+      RCLCPP_WARN(get_logger(),
         "GetUnlabeledMarkerGlobalTranslation failed (result = %s)",
         Enum2String(_Output_GetUnlabeledMarkerGlobalTranslation.Result).c_str());
     }
@@ -275,10 +281,12 @@ void ViconDriver::marker_to_tf(
   tf_broadcaster_->sendTransform(transforms);
 }
 
-ViconDriver::ViconDriver()
+ViconDriver::ViconDriver() : rclcpp_lifecycle::LifecycleNode("vicon_node")
 {
-  vicon_node = rclcpp::Node::make_shared("vicon_node");
-  tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(vicon_node);
+  //vicon_node = rclcpp::Node::make_shared("vicon_node");
+  //parameters_client = std::make_shared<rclcpp::SyncParametersClient>(vicon_node);
+  //tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(vicon_node);
+  tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(this);
   stream_mode_ = "ClientPull";
   host_name_ = "192.168.10.1:801";
   tf_ref_frame_id_ = "vicon_world";
@@ -291,18 +299,124 @@ ViconDriver::ViconDriver()
   droppedFrameCount = 0;
   n_markers = 0;
   n_unlabeled_markers = 0;
+
+  /*
+  auto request = std::make_shared<lifecycle_msgs::srv::ChangeState::Request>();
+  request->transition.id = lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE;
+  auto future_result = client_change_state_->async_send_request(request);
+  */
+
+  declare_parameter("test_param", "");
+  get_parameter("test_param", params_file_);
+  RCLCPP_INFO(get_logger(), "test_param [%s]", params_file_);
+  /*
+  declare_parameter("params_file", "");
+  get_parameter("params_file", params_file_);
+  RCLCPP_INFO(get_logger(), "params_file [%s]", params_file_);
+  */
+
+  client_change_state_ = this->create_client<lifecycle_msgs::srv::ChangeState>(
+      "/vicon2_driver/change_state");
+  update_pub_ = create_publisher<std_msgs::msg::Empty>("/vicon2_driver/update_notify",
+    rclcpp::QoS(100));
+}
+
+using CallbackReturnT =
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
+
+CallbackReturnT
+ViconDriver::on_configure(const rclcpp_lifecycle::State & state)
+{
+  RCLCPP_INFO(get_logger(), "State [%s]", state.label());
+  RCLCPP_INFO(get_logger(), "[%s] Configuring...", get_name());
+  /*...*/
+  RCLCPP_INFO(get_logger(), "[%s] Configured", get_name());
+
+  return CallbackReturnT::SUCCESS;
+}
+
+CallbackReturnT
+ViconDriver::on_activate(const rclcpp_lifecycle::State & state)
+{
+  RCLCPP_INFO(get_logger(), "State [%s]", state.label());
+  RCLCPP_INFO(get_logger(), "[%s] Activating...", get_name());
+  update_pub_->on_activate();
+  RCLCPP_INFO(get_logger(), "[%s] Activated", get_name());
+
+  return CallbackReturnT::SUCCESS;
+}
+
+CallbackReturnT
+ViconDriver::on_deactivate(const rclcpp_lifecycle::State & state)
+{
+  RCLCPP_INFO(get_logger(), "State [%s]", state.label());
+  RCLCPP_INFO(get_logger(), "[%s] Deactivating...", get_name());
+  update_pub_->on_deactivate();
+  RCLCPP_INFO(get_logger(), "[%s] Deactivated", get_name());
+
+  return CallbackReturnT::SUCCESS;
+}
+
+CallbackReturnT
+ViconDriver::on_cleanup(const rclcpp_lifecycle::State & state)
+{
+  RCLCPP_INFO(get_logger(), "State [%s]", state.label());
+  RCLCPP_INFO(get_logger(), "[%s] Cleaning up...", get_name());
+  RCLCPP_INFO(get_logger(), "[%s] Cleaned up", get_name());
+
+  return CallbackReturnT::SUCCESS;
+}
+
+CallbackReturnT
+ViconDriver::on_shutdown(const rclcpp_lifecycle::State & state)
+{
+  RCLCPP_INFO(get_logger(), "State [%s]", state.label());
+  RCLCPP_INFO(get_logger(), "[%s] Shutting down...", get_name());
+  RCLCPP_INFO(get_logger(), "[%s] Shutted down", get_name());
+
+  return CallbackReturnT::SUCCESS;
+}
+
+CallbackReturnT
+ViconDriver::on_error(const rclcpp_lifecycle::State & state)
+{
+  RCLCPP_INFO(get_logger(), "State [%s]", state.label());
+  RCLCPP_ERROR(get_logger(), "[%s] Error transition", get_name());
+
+  return CallbackReturnT::SUCCESS;
 }
 
 bool ViconDriver::connect_vicon()
 {
-  RCLCPP_WARN(vicon_node->get_logger(),
+  //vicon_node->declare_parameter("foo");
+  //auto set_parameters_results = parameters_client->set_parameters({rclcpp::Parameter("foo", 2)});
+  /*
+  auto abc = my_parameter_.get_type();
+  RCLCPP_INFO(vicon_node->get_logger(), "params_file = %s", abc);*/
+  /*
+  for (auto & test_param : test_param_) {
+    RCLCPP_INFO(vicon_node->get_logger(), test_param.get_value<std::string>());
+  }
+
+  std::stringstream ss;
+  for (auto & parameter : parameters_client->get_parameters({"test_param", "abc", "foo"}))
+  {
+    ss << "\nParameter name: " << parameter.get_name();
+    ss << "\nParameter value (" << parameter.get_value() << "): " << parameter.value_to_string();
+  }
+  RCLCPP_INFO(vicon_node->get_logger(), ss.str().c_str());
+  RCLCPP_INFO(vicon_node->get_logger(), "test_param_ = %s", test_param_.c_str());
+  */
+
+
+  RCLCPP_WARN(get_logger(),
     "Trying to connect to Vicon DataStream SDK at %s ...",
     host_name_.c_str());
 
   if (client.Connect(host_name_).Result == ViconDataStreamSDK::CPP::Result::Success) {
-    RCLCPP_INFO(vicon_node->get_logger(), "... connected!");
+    RCLCPP_INFO(get_logger(), "... connected!");
   } else {
-    RCLCPP_INFO(vicon_node->get_logger(), "... not connected :(");
+    RCLCPP_INFO(get_logger(), "... not connected :(");
   }
 
   return client.IsConnected().Connected;
