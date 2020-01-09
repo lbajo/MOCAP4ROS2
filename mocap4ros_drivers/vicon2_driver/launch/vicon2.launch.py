@@ -38,7 +38,7 @@ def generate_launch_description():
     project_dir = get_package_share_directory('vicon2_driver')
     params_file = LaunchConfiguration('params_file')
 
-    params_path = os.path.join(get_package_share_directory('vicon2_driver'), 'config', 'vicon_driver_params.yaml')
+    params_path = os.path.join(get_package_share_directory('vicon2_driver'), 'config', 'vicon2_driver_params.yaml')
 
     # print('')
     # print('params_path: ', params_path)
