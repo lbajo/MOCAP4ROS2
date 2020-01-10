@@ -379,7 +379,7 @@ bool ViconDriver::connect_vicon()
   if (client.Connect(host_name_).Result == ViconDataStreamSDK::CPP::Result::Success) {
     RCLCPP_INFO(get_logger(), "... connected!");
   } else {
-    RCLCPP_INFO(get_logger(), "... not connected :(");
+    RCLCPP_INFO(get_logger(), "... not connected :( ");
   }
 
   return client.IsConnected().Connected;
