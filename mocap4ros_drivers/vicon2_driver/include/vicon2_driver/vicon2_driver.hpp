@@ -71,7 +71,8 @@ private:
   // std::shared_ptr<rclcpp::SyncParametersClient> parameters_client;
   rclcpp::Time now_time;
   std::string myParam;
-  rclcpp::Publisher<mocap4ros_msgs::msg::Markers>::SharedPtr marker_pub_;
+  // rclcpp::Publisher<mocap4ros_msgs::msg::Markers>::SharedPtr marker_pub_;
+  rclcpp_lifecycle::LifecyclePublisher<mocap4ros_msgs::msg::Markers>::SharedPtr marker_pub_;
   std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
   std::string stream_mode_;
   std::string host_name_;

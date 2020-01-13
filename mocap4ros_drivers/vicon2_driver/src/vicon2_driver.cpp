@@ -132,22 +132,29 @@ void ViconDriver::set_settings_vicon()
     _Output_GetVersion.Point
   );
 
+  /*
   if (publish_markers_) {
     marker_pub_ = create_publisher<mocap4ros_msgs::msg::Markers>(
       tracked_frame_suffix_ + "/markers", 100);
+    RCLCPP_WARN(get_logger(), "publish_markers_ configured!!!");
   }
+  */
 }
 
 void ViconDriver::start_vicon()
 {
   set_settings_vicon();
-  rclcpp::WallRate d(1.0 / 240.0);
+  //rclcpp::WallRate d(1.0 / 240.0);
+  auto period = std::chrono::milliseconds(100);
+  rclcpp::Rate d(period);
   while (rclcpp::ok()) {
     while (client.GetFrame().Result != ViconDataStreamSDK::CPP::Result::Success && rclcpp::ok()) {
-      RCLCPP_INFO(get_logger(), "getFrame returned false");
+      RCLCPP_WARN(get_logger(), "getFrame returned false");
       d.sleep();
     }
-    now_time = this->now();
+
+    //RCLCPP_WARN(get_logger(), "OUT while");
+    //now_time = this->now();
     process_frame();
   }
 }
@@ -245,6 +252,9 @@ void ViconDriver::process_markers(const rclcpp::Time & frame_time, unsigned int 
         Enum2String(_Output_GetUnlabeledMarkerGlobalTranslation.Result).c_str());
     }
   }
+  if (!marker_pub_->is_activated()) {
+    RCLCPP_WARN(get_logger(), "Lifecycle publisher is currently inactive. Messages are not published.");
+  }
   marker_pub_->publish(markers_msg);
 }
 
@@ -283,9 +293,6 @@ void ViconDriver::marker_to_tf(
 ViconDriver::ViconDriver(const rclcpp::NodeOptions node_options)
 : rclcpp_lifecycle::LifecycleNode("vicon2_driver_node", node_options)
 {
-  // vicon_node = rclcpp::Node::make_shared("vicon_node");
-  // parameters_client = std::make_shared<rclcpp::SyncParametersClient>(vicon_node);
-  // tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(vicon_node);
   tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(this);
 
   /*
@@ -296,8 +303,14 @@ ViconDriver::ViconDriver(const rclcpp::NodeOptions node_options)
 
   client_change_state_ = this->create_client<lifecycle_msgs::srv::ChangeState>(
     "/vicon2_driver/change_state");
+  /*
   update_pub_ = create_publisher<std_msgs::msg::Empty>(
     "/vicon2_driver/update_notify", rclcpp::QoS(100));
+  */
+  // auto qos = rclcpp::QoS(rclcpp::KeepAll());
+  auto qos = rclcpp::QoS(rclcpp::KeepLast(100));
+  update_pub_ = create_publisher<std_msgs::msg::Empty>(
+    "/vicon2_driver/update_notify", qos);
 
   initParameters();
 }
@@ -311,6 +324,13 @@ ViconDriver::on_configure(const rclcpp_lifecycle::State & state)
   RCLCPP_INFO(get_logger(), "State id [%d]", get_current_state().id());
   RCLCPP_INFO(get_logger(), "State label [%s]", get_current_state().label().c_str());
   /* Configuring stuff */
+
+  if (publish_markers_) {
+    marker_pub_ = create_publisher<mocap4ros_msgs::msg::Markers>(
+      tracked_frame_suffix_ + "/markers", 100);
+    RCLCPP_WARN(get_logger(), "publish_markers_ configured!!!");
+  }
+  //timer_ = this->create_wall_timer(1s, std::bind(&LifecycleTalker::publish, this));
   RCLCPP_INFO(get_logger(), "Configured!\n");
 
   return CallbackReturnT::SUCCESS;
@@ -322,6 +342,7 @@ ViconDriver::on_activate(const rclcpp_lifecycle::State & state)
   RCLCPP_INFO(get_logger(), "State id [%d]", get_current_state().id());
   RCLCPP_INFO(get_logger(), "State label [%s]", get_current_state().label().c_str());
   update_pub_->on_activate();
+  marker_pub_->on_activate();
   connect_vicon();
   RCLCPP_INFO(get_logger(), "Activated!\n");
 
@@ -376,8 +397,15 @@ bool ViconDriver::connect_vicon()
     "Trying to connect to Vicon DataStream SDK at %s ...",
     host_name_.c_str());
 
+  //ViconDataStreamSDK::CPP::Output_IsConnected Output_isconnected = client.IsConnected();
+  //RCLCPP_WARN(get_logger(), "Output_IsConnected?: %s", Output_isconnected);
+
+  ViconDataStreamSDK::CPP::Output_Connect Output = client.Connect(host_name_);
+  //RCLCPP_WARN(get_logger(), "Connection Output: %s", Output);
+
   if (client.Connect(host_name_).Result == ViconDataStreamSDK::CPP::Result::Success) {
     RCLCPP_INFO(get_logger(), "... connected!");
+    start_vicon();
   } else {
     RCLCPP_INFO(get_logger(), "... not connected :( ");
   }
