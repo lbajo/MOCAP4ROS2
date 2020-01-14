@@ -47,7 +47,7 @@ void MocapCameraComposer::marker_to_tf(const mocap4ros_msgs::msg::Markers::Share
   std::vector<geometry_msgs::msg::TransformStamped> transforms;
 
   for (mocap4ros_msgs::msg::Marker marker : markers_msg->markers) {
-    RCLCPP_INFO(camera_composer_node->get_logger(), "marker name %s", marker.marker_name);
+    // RCLCPP_INFO(camera_composer_node->get_logger(), "marker name %s", marker.marker_name);
     marker_id++;
     tf2::Transform transform;
     transform.setOrigin(tf2::Vector3(marker.translation.x / 1000,
