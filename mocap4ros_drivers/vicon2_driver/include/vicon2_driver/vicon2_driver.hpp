@@ -19,6 +19,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <map>
 #include <string>
 #include <memory>
 #include <chrono>
@@ -86,6 +87,9 @@ private:
   int droppedFrameCount_;
   int n_markers_;
   int n_unlabeled_markers_;
+  std::string qos_history_policy_;
+  std::string qos_reliability_policy_;
+  int qos_depth_;
 
   void process_frame();
   void process_markers(const rclcpp::Time & frame_time, unsigned int vicon_frame_num);
@@ -95,4 +99,17 @@ private:
   std::shared_ptr<rclcpp::Client<lifecycle_msgs::srv::ChangeState>> client_change_state_;
   rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Empty>::SharedPtr update_pub_;
 };
+
+static
+std::map<std::string, rmw_qos_reliability_policy_t> name_to_reliability_policy_map = {
+  {"reliable", RMW_QOS_POLICY_RELIABILITY_RELIABLE},
+  {"best_effort", RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT}
+};
+
+static
+std::map<std::string, rmw_qos_history_policy_t> name_to_history_policy_map = {
+  {"keep_last", RMW_QOS_POLICY_HISTORY_KEEP_LAST},
+  {"keep_all", RMW_QOS_POLICY_HISTORY_KEEP_ALL}
+};
+
 #endif  // VICON2_DRIVER__VICON2_DRIVER_HPP_
