@@ -241,7 +241,7 @@ void ViconDriver::process_markers(const rclcpp::Time & frame_time, unsigned int 
       this_marker.translation.x = _Output_GetUnlabeledMarkerGlobalTranslation.Translation[0];
       this_marker.translation.y = _Output_GetUnlabeledMarkerGlobalTranslation.Translation[1];
       this_marker.translation.z = _Output_GetUnlabeledMarkerGlobalTranslation.Translation[2];
-      this_marker.occluded = false;
+      // this_marker.occluded = false;
       markers_msg.markers.push_back(this_marker);
 
       marker_to_tf(this_marker, marker_cnt, frame_time);
@@ -293,25 +293,6 @@ void ViconDriver::marker_to_tf(
 ViconDriver::ViconDriver(const rclcpp::NodeOptions node_options)
 : rclcpp_lifecycle::LifecycleNode("vicon2_driver_node", node_options)
 {
-  tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(this);
-
-  /*
-  auto request = std::make_shared<lifecycle_msgs::srv::ChangeState::Request>();
-  request->transition.id = lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE;
-  auto future_result = client_change_state_->async_send_request(request);
-  */
-
-  client_change_state_ = this->create_client<lifecycle_msgs::srv::ChangeState>(
-    "/vicon2_driver/change_state");
-  /*
-  update_pub_ = create_publisher<std_msgs::msg::Empty>(
-    "/vicon2_driver/update_notify", rclcpp::QoS(100));
-  */
-  // auto qos = rclcpp::QoS(rclcpp::KeepAll());
-  auto qos = rclcpp::QoS(rclcpp::KeepLast(100));
-  update_pub_ = create_publisher<std_msgs::msg::Empty>(
-    "/vicon2_driver/update_notify", qos);
-
   initParameters();
 }
 
@@ -323,14 +304,37 @@ ViconDriver::on_configure(const rclcpp_lifecycle::State & state)
 {
   RCLCPP_INFO(get_logger(), "State id [%d]", get_current_state().id());
   RCLCPP_INFO(get_logger(), "State label [%s]", get_current_state().label().c_str());
-  /* Configuring stuff */
 
-  if (publish_markers_) {
-    marker_pub_ = create_publisher<mocap4ros_msgs::msg::Markers>(
-      tracked_frame_suffix_ + "/markers", 100);
-    RCLCPP_WARN(get_logger(), "publish_markers_ configured!!!");
-  }
-  //timer_ = this->create_wall_timer(1s, std::bind(&LifecycleTalker::publish, this));
+  auto rmw_qos_history_policy = name_to_history_policy_map.find(qos_history_policy_);
+  auto rmw_qos_reliability_policy = name_to_reliability_policy_map.find(qos_reliability_policy_);
+  auto qos = rclcpp::QoS(
+    rclcpp::QoSInitialization(
+      // The history policy determines how messages are saved until taken by
+      // the reader.
+      // KEEP_ALL saves all messages until they are taken.
+      // KEEP_LAST enforces a limit on the number of messages that are saved,
+      // specified by the "depth" parameter.
+      rmw_qos_history_policy->second,
+      // Depth represents how many messages to store in history when the
+      // history policy is KEEP_LAST.
+      qos_depth_
+  ));
+  // The reliability policy can be reliable, meaning that the underlying transport layer will try
+  // ensure that every message gets received in order, or best effort, meaning that the transport
+  // makes no guarantees about the order or reliability of delivery.
+  qos.reliability(rmw_qos_reliability_policy->second);
+
+  tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(this);
+
+  client_change_state_ = this->create_client<lifecycle_msgs::srv::ChangeState>(
+    "/vicon2_driver/change_state");
+
+  marker_pub_ = create_publisher<mocap4ros_msgs::msg::Markers>(
+    tracked_frame_suffix_ + "/markers", 100);
+
+  update_pub_ = create_publisher<std_msgs::msg::Empty>(
+    "/vicon2_driver/update_notify", qos);
+
   RCLCPP_INFO(get_logger(), "Configured!\n");
 
   return CallbackReturnT::SUCCESS;
@@ -355,6 +359,7 @@ ViconDriver::on_deactivate(const rclcpp_lifecycle::State & state)
   RCLCPP_INFO(get_logger(), "State id [%d]", get_current_state().id());
   RCLCPP_INFO(get_logger(), "State label [%s]", get_current_state().label().c_str());
   update_pub_->on_deactivate();
+  marker_pub_->on_deactivate();
   RCLCPP_INFO(get_logger(), "Deactivated!\n");
 
   return CallbackReturnT::SUCCESS;
@@ -394,14 +399,7 @@ ViconDriver::on_error(const rclcpp_lifecycle::State & state)
 bool ViconDriver::connect_vicon()
 {
   RCLCPP_WARN(get_logger(),
-    "Trying to connect to Vicon DataStream SDK at %s ...",
-    host_name_.c_str());
-
-  //ViconDataStreamSDK::CPP::Output_IsConnected Output_isconnected = client.IsConnected();
-  //RCLCPP_WARN(get_logger(), "Output_IsConnected?: %s", Output_isconnected);
-
-  ViconDataStreamSDK::CPP::Output_Connect Output = client.Connect(host_name_);
-  //RCLCPP_WARN(get_logger(), "Connection Output: %s", Output);
+    "Trying to connect to Vicon DataStream SDK at %s ...", host_name_.c_str());
 
   if (client.Connect(host_name_).Result == ViconDataStreamSDK::CPP::Result::Success) {
     RCLCPP_INFO(get_logger(), "... connected!");
@@ -427,6 +425,9 @@ void ViconDriver::initParameters()
   declare_parameter<int>("droppedFrameCount", 0);
   declare_parameter<int>("n_markers", 0);
   declare_parameter<int>("n_unlabeled_markers", 0);
+  declare_parameter<std::string>("qos_history_policy", "keep_all");
+  declare_parameter<std::string>("qos_reliability_policy", "best_effort");
+  declare_parameter<int>("qos_depth", 10);
 
   get_parameter<std::string>("stream_mode", stream_mode_);
   get_parameter<std::string>("host_name", host_name_);
@@ -440,6 +441,9 @@ void ViconDriver::initParameters()
   get_parameter<int>("droppedFrameCount", droppedFrameCount_);
   get_parameter<int>("n_markers", n_markers_);
   get_parameter<int>("n_unlabeled_markers", n_unlabeled_markers_);
+  get_parameter<std::string>("qos_history_policy", qos_history_policy_);
+  get_parameter<std::string>("qos_reliability_policy", qos_reliability_policy_);
+  get_parameter<int>("qos_depth", qos_depth_);
 
   RCLCPP_WARN(get_logger(),
     "Param stream_mode: %s", stream_mode_.c_str());
@@ -465,4 +469,10 @@ void ViconDriver::initParameters()
     "Param n_markers: %d", n_markers_);
   RCLCPP_WARN(get_logger(),
     "Param n_unlabeled_markers: %d", n_unlabeled_markers_);
+  RCLCPP_WARN(get_logger(),
+    "Param qos_history_policy: %s", qos_history_policy_.c_str());
+  RCLCPP_WARN(get_logger(),
+    "Param qos_reliability_policy: %s", qos_reliability_policy_.c_str());
+  RCLCPP_WARN(get_logger(),
+    "Param qos_depth: %d", qos_depth_);
 }
