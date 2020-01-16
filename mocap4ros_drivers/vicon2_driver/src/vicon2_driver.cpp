@@ -17,8 +17,8 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "vicon2_driver/vicon2_driver.hpp"
-#include "lifecycle_msgs/msg/state.hpp"
+#include <vicon2_driver/vicon2_driver.hpp>
+#include <lifecycle_msgs/msg/state.hpp>
 
 using std::min;
 using std::max;
@@ -152,8 +152,6 @@ void ViconDriver::start_vicon()
       RCLCPP_WARN(get_logger(), "getFrame returned false");
       d.sleep();
     }
-
-    //RCLCPP_WARN(get_logger(), "OUT while");
     //now_time = this->now();
     process_frame();
   }
@@ -171,6 +169,8 @@ void ViconDriver::process_frame()
 {
   static rclcpp::Time lastTime;
   ViconDataStreamSDK::CPP::Output_GetFrameNumber OutputFrameNum = client.GetFrameNumber();
+  ViconDataStreamSDK::CPP::Output_GetFrameRate OutputFrameRate = client.GetFrameRate ();
+  RCLCPP_WARN(get_logger(), "Frame rate: %f", OutputFrameRate.FrameRateHz);
 
   int frameDiff = 0;
   if (lastFrameNumber_ != 0) {
