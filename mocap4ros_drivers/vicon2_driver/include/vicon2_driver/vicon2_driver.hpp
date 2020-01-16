@@ -49,7 +49,13 @@
 class ViconDriver : public rclcpp_lifecycle::LifecycleNode
 {
 public:
-  explicit ViconDriver(const rclcpp::NodeOptions options = rclcpp::NodeOptions());
+  explicit ViconDriver(const rclcpp::NodeOptions options = 
+    rclcpp::NodeOptions().parameter_overrides(
+      std::vector<rclcpp::Parameter>{
+        rclcpp::Parameter("use_sim_time", true)
+      }
+    )
+  );
 
   using CallbackReturnT =
     rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
