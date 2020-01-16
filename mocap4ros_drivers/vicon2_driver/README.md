@@ -1,6 +1,6 @@
-#Prerequisites
+# Prerequisites
 
-## Installing Vicon DataStream SDK
+## Installing Vicon DataStream SDK on Linux
 
 Get the official binaries released in the official download page [here](https://www.vicon.com/software/datastream-sdk/?section=downloads).
 
