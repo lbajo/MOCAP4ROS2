@@ -8,13 +8,12 @@ You can check the documentation [here](https://docs.vicon.com/spaces/viewspace.a
 
 Copy all the libraries to /usr/local/lib and move the headers to /usr/local/include/ViconDataStreamSDK/.
 
-`sudo mv {YOUR_ViconDataStreamSDK}/Linux64/Release/* /usr/local/lib/`
-
-`cd /usr/local/include/`
-
-`sudo mkdir ViconDataStreamSDK`
-
-`sudo mv ../lib/*.h ViconDataStreamSDK/`
+```
+sudo mv {YOUR_ViconDataStreamSDK}/Linux64/Release/* /usr/local/lib/
+cd /usr/local/include/
+sudo mkdir ViconDataStreamSDK
+sudo mv ../lib/*.h ViconDataStreamSDK/
+```
 
 Update the `LD_LIBRARY_PATH` environment variable:
 
