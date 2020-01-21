@@ -44,7 +44,7 @@
 #include "tf2/buffer_core.h"
 #include "tf2_ros/transform_broadcaster.h"
 
-#include "ViconDataStreamSDK/DataStreamClient.h"
+#include "DataStreamClient.h"
 
 class ViconDriver : public rclcpp_lifecycle::LifecycleNode
 {

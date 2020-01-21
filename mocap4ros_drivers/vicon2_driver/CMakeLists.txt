@@ -18,7 +18,19 @@ find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(mocap4ros_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(Threads REQUIRED)
+# find_package(Boost REQUIRED COMPONENTS thread)
 
+set(CMAKE_USE_WIN32_THREADS_INIT 1)
+
+find_path(DATASTREAMCLIENT_INCLUDE_DIR DataStreamclient.h)
+find_library(DATASTREAMCLIENT_LIBRARY ViconDataStreamSDK_CPP)
+if(DATASTREAMCLIENT_INCLUDE_DIR AND DATASTREAMCLIENT_LIBRARY)
+  set(DATASTREAMCLIENT_FOUND 1)
+  message(STATUS "#### DATASTREAMCLIENT_INCLUDE_DIR: " ${DATASTREAMCLIENT_INCLUDE_DIR})
+  message(STATUS "#### DATASTREAMCLIENT_LIBRARY: " ${DATASTREAMCLIENT_LIBRARY})
+endif()
+        
 set(dependencies
   ament_index_cpp
   rclcpp
@@ -30,6 +42,7 @@ set(dependencies
 
 include_directories(
   include
+  ${DATASTREAMCLIENT_INCLUDE_DIR}
 )
 
 add_library(${PROJECT_NAME} SHARED src/vicon2_driver.cpp)
@@ -41,14 +54,16 @@ add_executable(vicon2_driver_main
 ament_target_dependencies(vicon2_driver_main ${dependencies})
 target_link_libraries(vicon2_driver_main
   ${PROJECT_NAME}
-  ViconDataStreamSDK_CPP
+  ${DATASTREAMCLIENT_LIBRARY}
+  # ${CMAKE_THREAD_LIBS_INIT}
 )
 
 ament_target_dependencies(vicon2_driver ${dependencies})
 target_link_libraries(vicon2_driver
-  ViconDataStreamSDK_CPP
-#  Boost::system
-#  Boost::thread
+  ${DATASTREAMCLIENT_LIBRARY}
+  # ${CMAKE_THREAD_LIBS_INIT}
+  # Boost::system
+  # Boost::thread
 )
 
 install(DIRECTORY include/
@@ -74,7 +89,7 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-ament_export_include_directories(include)
+ament_export_include_directories(include ${DATASTREAMCLIENT_INCLUDE_DIR})
 ament_export_libraries(${PROJECT_NAME})
 ament_export_dependencies(${dependencies})
 ament_package()
