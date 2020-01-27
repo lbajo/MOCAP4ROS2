@@ -1,10 +1,10 @@
-# Prerequisites
-
-## Installing Vicon DataStream SDK on Linux
+# Vicon DataStream SDK
 
 Get the official binaries released in the official download page [here](https://www.vicon.com/software/datastream-sdk/?section=downloads).
 
 You can check the documentation [here](https://docs.vicon.com/spaces/viewspace.action?key=DSSDK19).
+
+## Installing on Linux
 
 Copy all the libraries to /usr/local/lib and move the headers to /usr/local/include/ViconDataStreamSDK/.
 
@@ -23,6 +23,13 @@ It's convenient to automatically update this environment variable in your bash s
 
 `echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/"`
 
+## Installing on Windows
+
+Execute the installer of your distribution (typically Win64).
+
+SDK files are placed to `C:\Program Files\Vicon\DataStream SDK\Win64\CPP` by default, so update the `PATH` environment variable with this SDK path:
+
+`set PATH=%PATH%;C:\Program Files\Vicon\DataStream SDK\Win64\CPP`
 
 ## Guide
 
