@@ -17,14 +17,15 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <vicon2_driver/vicon2_driver.hpp>
-#include <lifecycle_msgs/msg/state.hpp>
+#include "vicon2_driver/vicon2_driver.hpp"
 
 using std::min;
 using std::max;
 using std::string;
 using std::map;
 using std::stringstream;
+
+using CallbackReturnT = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
 string Enum2String(const ViconDataStreamSDK::CPP::Direction::Enum i_Direction)
 {
@@ -290,14 +291,13 @@ void ViconDriver::marker_to_tf(
   tf_broadcaster_->sendTransform(transforms);
 }
 
+/*
 ViconDriver::ViconDriver(const rclcpp::NodeOptions node_options)
 : rclcpp_lifecycle::LifecycleNode("vicon2_driver_node", node_options)
 {
   initParameters();
 }
-
-using CallbackReturnT =
-  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
+*/
 
 CallbackReturnT
 ViconDriver::on_configure(const rclcpp_lifecycle::State & state)
@@ -334,6 +334,8 @@ ViconDriver::on_configure(const rclcpp_lifecycle::State & state)
 
   update_pub_ = create_publisher<std_msgs::msg::Empty>(
     "/vicon2_driver/update_notify", qos);
+  
+  initParameters();
 
   RCLCPP_INFO(get_logger(), "Configured!\n");
 
@@ -349,7 +351,6 @@ ViconDriver::on_activate(const rclcpp_lifecycle::State & state)
   marker_pub_->on_activate();
   connect_vicon();
   RCLCPP_INFO(get_logger(), "Activated!\n");
-
   return CallbackReturnT::SUCCESS;
 }
 

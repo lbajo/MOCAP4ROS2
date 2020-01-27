@@ -22,8 +22,11 @@
 int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<ViconDriver>();
-  rclcpp::spin(node->get_node_base_interface());
+  
+  auto vicon2_node = std::make_shared<ViconDriver>("vicon2_driver_node");
+
+  rclcpp::spin(vicon2_node->get_node_base_interface());
+  
   rclcpp::shutdown();
 
   return 0;
